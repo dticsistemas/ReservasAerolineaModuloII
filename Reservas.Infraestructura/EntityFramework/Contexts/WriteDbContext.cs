@@ -49,7 +49,6 @@ namespace Reservas.Infraestructura.EntityFramework.Contexts
 
             modelBuilder.Ignore<DomainEvent>();
             modelBuilder.Ignore<ReservaCreadaEvent>();
-           // modelBuilder.Ignore<ItemPedidoAgregado>();
         }
     }
 }
