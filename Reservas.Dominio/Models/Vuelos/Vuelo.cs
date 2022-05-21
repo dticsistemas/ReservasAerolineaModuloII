@@ -17,6 +17,13 @@ namespace Reservas.Dominio.Models.Vuelos
         {
             Id = Guid.NewGuid();
         }
+        public Vuelo(int cantidad,String detalle, decimal precioPasaje)
+        {
+            Id = Guid.NewGuid();
+            Detalle = detalle;
+            Cantidad = cantidad;
+            PrecioPasaje = precioPasaje;
+        }
         public void DescontarCantidadVuelo()
         {
             Cantidad--;

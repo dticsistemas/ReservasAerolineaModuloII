@@ -50,7 +50,7 @@ namespace Reservas.Aplicacion.UsesCases.Commands.Reservas.CrearReserva
                     objReserva.CrearReserva(request.clienteId, request.vueloId, objVuelo.PrecioPasaje, request.tipoReserva);
                     objReserva.ConsolidarReserva();
 
-                    await _reservaService.EnviarEmailReserva(objReserva);
+                    //await _reservaService.EnviarEmailReserva(objReserva);
 
                     await _reservaRepository.CreateAsync(objReserva);
 

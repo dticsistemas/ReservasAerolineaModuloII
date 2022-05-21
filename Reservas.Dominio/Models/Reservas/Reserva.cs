@@ -23,7 +23,7 @@ namespace Reservas.Dominio.Models.Reservas
         public Guid VueloId;
 
         private Reserva() { }
-        internal Reserva(String codReserva)
+        public Reserva(String codReserva)
         {
             Id = Guid.NewGuid();
             CodReserva = codReserva;
