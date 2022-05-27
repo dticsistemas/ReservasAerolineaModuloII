@@ -6,6 +6,7 @@ using Reservas.Dominio.Factories.Pagos;
 using Reservas.Dominio.Models.Pagos;
 using Reservas.Dominio.Repositories;
 using Reservas.Dominio.Repositories.Pagos;
+using Reservas.Dominio.Repositories.Reservas;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,7 +16,7 @@ using System.Threading.Tasks;
 
 namespace Reservas.Aplicacion.UsesCases.Commands.Pagos.CrearFactura
 {    
-     public class CrearFacturaHandler : INotificationHandler<PagoCompletadoEvent>
+     public class CrearFacturaHandler : IRequestHandler<CrearFacturaCommand, Guid>
     {
         private readonly IFacturaRepository _facturaRepository;
         private readonly ILogger<CrearFacturaHandler> _logger;
@@ -31,7 +32,7 @@ namespace Reservas.Aplicacion.UsesCases.Commands.Pagos.CrearFactura
             _facturaFactory = facturaFactory;
             _unitOfWork = unitOfWork;
         }
-        public async Task Handle(PagoCompletadoEvent notification, CancellationToken cancellationToken)
+        public async Task<Guid> Handle(CrearFacturaCommand request, CancellationToken cancellationToken)
         {
             try
             {
@@ -39,16 +40,19 @@ namespace Reservas.Aplicacion.UsesCases.Commands.Pagos.CrearFactura
 
                 Factura objFactura = _facturaFactory.Create(nroFactura);
 
-                objFactura.CrearFactura(notification.ReservaId, notification.Monto);
+                objFactura.CrearFactura(request.ReservaId, request.Monto);
 
                 await _facturaService.EnviarEmailFactura(objFactura);
-                await _facturaRepository.CreateAsync(objFactura);               
+                await _facturaRepository.CreateAsync(objFactura);
+                await _unitOfWork.Commit();
+                return objFactura.Id;
 
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error al crear Factura");
             }
+            return Guid.Empty;
         }
 
     }
