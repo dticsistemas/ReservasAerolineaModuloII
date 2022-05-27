@@ -24,4 +24,8 @@
     <ProjectReference Include="..\Reservas.Aplicacion\Reservas.Aplicacion.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="PostmanTestIntegracion\" />
+  </ItemGroup>
+
 </Project>

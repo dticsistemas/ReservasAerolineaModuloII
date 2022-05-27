@@ -17,7 +17,11 @@
 							"pm.test(\"Status code is 200\", function () {\r",
 							"    pm.response.to.have.status(200);\r",
 							"    let respText = pm.response.text();\r",
-							"    //pm.environment.set(\"producto_id\", respText.substring(1,respText.length-1));\r",
+							"    console.log(\"Factura Creada\");\r",
+							"    pm.environment.set(\"testFacturaId\", respText.substring(1,respText.length-1));\r",
+							"    console.log(\"Llamando a Factura Creada\");\r",
+							"    postman.setNextRequest(\"BuscarFacturaPorId\");\r",
+							"    postman.setNextRequest(\"BuscarFacturaIDReserva\");\r",
 							"});\r",
 							"pm.test(\"Response not empty\", function () {\r",
 							"    pm.expect(pm.response.text()).not.empty;\r",
@@ -30,8 +34,8 @@
 					"listen": "prerequest",
 					"script": {
 						"exec": [
-							"pm.environment.set(\"testReservaId\", \"b0f3d67c-8b33-48c3-ab1f-b5ddbdab2b60\");\r",
-							"pm.environment.set(\"testMonto\", 250); "
+							"pm.environment.set(\"testReservaId\", \"\\\"b0f3d67c-8b33-48c3-ab1f-b5ddbdab2b60\\\"\");\r",
+							"pm.environment.set(\"testMonto\", 1554); "
 						],
 						"type": "text/javascript"
 					}
@@ -54,15 +58,11 @@
 					"raw": "{\r\n  \"reservaId\":{{testReservaId}},\r\n  \"monto\":  {{testMonto}}\r\n}"
 				},
 				"url": {
-					"raw": "https://localhost:44378/api/Reserva/Factura",
-					"protocol": "https",
+					"raw": "{{TEST_URL}}/Factura",
 					"host": [
-						"localhost"
+						"{{TEST_URL}}"
 					],
-					"port": "44378",
 					"path": [
-						"api",
-						"Reserva",
 						"Factura"
 					]
 				}
@@ -70,7 +70,69 @@
 			"response": []
 		},
 		{
+			"name": "BuscarFacturaPorId",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"    console.log(\"Mostrando Datos Factura Creada\");\r",
+							"    console.log(pm.response.text());\r",
+							"});\r",
+							"pm.test(\"Response not empty\", function () {\r",
+							"    pm.expect(pm.response.text()).not.empty;\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{TEST_URL}}/Factura/{{{testFacturaId}}}",
+					"host": [
+						"{{TEST_URL}}"
+					],
+					"path": [
+						"Factura",
+						"{{{testFacturaId}}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "BuscarFacturaIDReserva",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"    console.log(\"Facturas encontradas asociadas al ID de reserva enviado\");\r",
+							"});\r",
+							"pm.test(\"Response not empty\", function () {\r",
+							"    pm.expect(pm.response.text()).not.empty;\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
 			"request": {
 				"method": "POST",
 				"header": [
@@ -82,47 +144,15 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n  \"reservaId\": \"2b8fdb0a-54a0-4dbd-9ea6-59bd29245b3b\",\r\n  \"monto\": 250\r\n}"
+					"raw": "{\r\n  \"reservaId\": {{testReservaId}}\r\n}"
 				},
 				"url": {
-					"raw": "https://localhost:44378/api/Reserva/BuscarFacturaReserva?reservaId=ec243367-c510-49db-ac6c-d3c0c59470de",
-					"protocol": "https",
+					"raw": "{{TEST_URL}}/BuscarFacturaReserva",
 					"host": [
-						"localhost"
+						"{{TEST_URL}}"
 					],
-					"port": "44378",
 					"path": [
-						"api",
-						"Reserva",
 						"BuscarFacturaReserva"
-					],
-					"query": [
-						{
-							"key": "reservaId",
-							"value": "ec243367-c510-49db-ac6c-d3c0c59470de"
-						}
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "BuscarFacturaPorId",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "https://localhost:44378/api/Reserva/Factura/{e73bf963-18f8-4d3c-b73a-140b765946f2}",
-					"protocol": "https",
-					"host": [
-						"localhost"
-					],
-					"port": "44378",
-					"path": [
-						"api",
-						"Reserva",
-						"Factura",
-						"{e73bf963-18f8-4d3c-b73a-140b765946f2}"
 					]
 				}
 			},
